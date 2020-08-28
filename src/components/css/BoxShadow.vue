@@ -4,50 +4,60 @@
       <h3>Box Shadow Options</h3>
       <div>
         <p>Horizontal Shadow Length</p>
-        <input type="range" min="-200" max="200" value="0" v-model='state.horizontalShadow.result'>
+        <input type="range" min="-200" max="200" value="0" v-model='state.horizontalShadow.result'/>
         {{state.horizontalShadow.result}}px
       </div>
       <div>
         <p>Vertical Shadow Length</p>
-        <input type="range" min="-200" max="200" value="0" v-model='state.verticalShadow.result'>
+        <input type="range" min="-200" max="200" value="0" v-model='state.verticalShadow.result'/>
         {{state.verticalShadow.result}}px
       </div>
       <div>
         <p>Blur Radius</p>
-        <input type="range" min="0" max="400" value="2" v-model='state.blurRadius.result'>
+        <input type="range" min="0" max="400" value="2" v-model='state.blurRadius.result'/>
         {{state.blurRadius.result}}px
       </div>
       <div>
         <p>Spread Radius</p>
-        <input type="range" min="-200" max="200" value="0" v-model='state.spreadRadius.result'>
+        <input type="range" min="-200" max="200" value="0" v-model='state.spreadRadius.result'/>
         {{state.spreadRadius.result}}px
+      </div>
+      <div>
+        <p>Shadow Color Opacity</p>
+        <input type="range" min="0" max="100" value="0" v-model='state.shadowColorOpacity.result'/>
+        0.{{state.shadowColorOpacity.result}}
+        <span >
+
+        </span>
       </div>
       <div>
         <p>Shadow Color</p>
         <input type="color">
       </div>
-        <input type="checkbox"  v-bind:checked='state.inset.isTrue' >
-
-      <label class="switch">
-        <!-- <input type="checkbox"  checked=false > -->
-        <!-- <span class="slider" ></span> -->
-      </label>
+      <div>
+        <p>Insert</p>
+        <input type="checkbox"  v-bind:checked='state.inset.isTrue' v-on:click='handleSetInset' />
+         <label class="switch">
+          <!-- <input type="checkbox"  checked=false > -->
+          <!-- <span class="slider"></span> -->
+        </label>
+      </div>
     </div>
 
     <div class="boxShadow-inner-b-container">
       <div class="demo-container"
-        v-bind:style=' `box-shadow: ${state.horizontalShadow.result}px ${ state.verticalShadow.result }px ${ state.blurRadius.result }px ${ state.spreadRadius.result }px rgba(0,0,0,0.75);` '
-      >
+        v-bind:style=' `box-shadow: ${state.horizontalShadow.result}px ${ state.verticalShadow.result }px ${ state.blurRadius.result }px ${ state.spreadRadius.result }px rgba(0,0,0,0.${state.shadowColorOpacity.result}) ${inset ? "inset" : ""};` '>
         demo box
       </div>
-      <div class="code-container">
-        <p>box-shadow: {{ state.horizontalShadow.result }}px {{ state.verticalShadow.result }}px {{ state.blurRadius.result }}px {{ state.spreadRadius.result }}px rgba(0, 0, 0, 0.75);</p>
-        <p>-webkit-box-shadow: {{ state.horizontalShadow.result }}px {{ state.verticalShadow.result }}px {{ state.blurRadius.result }}px {{ state.spreadRadius.result }}px rgba(0, 0, 0, 0.75);</p>
-        <p>-moz-box-shadow: {{ state.horizontalShadow.result }}px {{ state.verticalShadow.result }}px {{ state.blurRadius.result }}px {{ state.spreadRadius.result }}px rgba(0, 0, 0, 0.75);</p>
-      </div>
-      <button>copy</button>
+      <textarea id="code-container" class="code-container">
+        box-shadow: {{ state.horizontalShadow.result }}px {{ state.verticalShadow.result }}px {{ state.blurRadius.result }}px {{ state.spreadRadius.result }}px rgba(0, 0, 0, 0.{{state.shadowColorOpacity.result}}){{inset ? " inset;" : ";"}}
+        -webkit-box-shadow: {{ state.horizontalShadow.result }}px {{ state.verticalShadow.result }}px {{ state.blurRadius.result }}px {{ state.spreadRadius.result }}px rgba(0, 0, 0, 0.{{state.shadowColorOpacity.result}}){{inset ? " inset;" : ";"}}
+        -moz-box-shadow: {{ state.horizontalShadow.result }}px {{ state.verticalShadow.result }}px {{ state.blurRadius.result }}px {{ state.spreadRadius.result }}px rgba(0, 0, 0, 0.{{state.shadowColorOpacity.result}}){{inset ? " inset;" : ";"}}
+      </textarea>
+      <input type="textBox" name="" id=""/>
+      <button v-on:click='handleCopyToClipboard'>copy</button>
+      <button v-on="{ mousedown: doThis, mouseup: doThat }">Lcik</button>
     </div>
-    
   </section>
 </template>
 
@@ -67,6 +77,9 @@ interface IBoxShadow {
     },
     spreadRadius: {
       min: number, start: number, max: number, result: string
+    },
+    shadowColorOpacity: {
+      min: number, start: number, max: number, result: string   
     },
     inset: {
       isTrue: boolean, text: string
@@ -91,9 +104,39 @@ export default Vue.extend({
         spreadRadius: {
           min: 200, start: 0, max: 200, result: '0'
         },
+        shadowColorOpacity: {
+          min: 0, start: 0, max: 100, result: '75'
+        },
         inset: {
           isTrue: false, text: ''
         }
+      }
+    }
+  },
+  methods: {
+    handleSetInset() {
+      this.state.inset.isTrue = !this.state.inset.isTrue
+    },
+    handleCopyToClipboard() {
+      let content: any = document.querySelector('#code-container')
+      content.select()
+      document.execCommand('copy')
+    },
+    doThis() {
+      console.log('mousedown')
+    },
+    doThat() {
+      console.log('mouseup')
+
+    }
+  },
+  computed: {
+    inset: {
+      get(): boolean {
+        return this.state.inset.isTrue
+      },
+      set() {
+        this.state.inset.isTrue = !this.state.inset.isTrue
       }
     }
   }

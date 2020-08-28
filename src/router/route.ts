@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import BoxShadow from '../components/css/BoxShadow.vue'
-import TextShadow from '../components/css/TextShadow.vue'
+import TextShadow from '../components/css/textShadow/TextShadow'
 import Gradient from '../components/css/Gradient.vue'
 import Border from '../components/css/Border.vue'
 import BorderRadius from '../components/css/BorderRadius.vue'
@@ -26,11 +26,11 @@ const routes: Array<RouteConfig> = [
     name: 'Gradient',
     component: Gradient
   },
-  {
-    path: '/css/cssCursor',
-    name: 'BoxShadow',
-    component: BoxShadow
-  },
+  // {
+  //   path: '/css/cssCursor',
+  //   name: 'BoxShadow',
+  //   component: BoxShadow
+  // },
   {
     path: '/css/border',
     name: 'Border',
